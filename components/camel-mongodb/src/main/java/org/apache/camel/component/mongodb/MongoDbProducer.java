@@ -386,14 +386,14 @@ public class MongoDbProducer extends DefaultProducer {
             
             Object insert = null;
             
-            if(singleInsert) {
+            if (singleInsert) {
                 insert = exchange1.getIn().getBody(DBObject.class);
-                if(insert == null) {
+                if (insert == null) {
                     // previous behavior:
                     // body could not be converted to DBObject, check to see if it's of type List<DBObject>
                     insert = getMultiInsertBody(exchange1);
                     singleInsert = false;
-                } else if(insert instanceof BasicDBList) {
+                } else if (insert instanceof BasicDBList) {
                     singleInsert = false;
                 }
             } else {
@@ -420,14 +420,14 @@ public class MongoDbProducer extends DefaultProducer {
         Object insert;
         // we try List first, because it should be the common case
         insert = exchange1.getIn().getBody(List.class);
-        if(insert != null) {
+        if (insert != null) {
             // if the body of type List was obtained, ensure that all items are of type DBObject and cast the List to List<DBObject>
             insert = attemptConvertToList((List<?>) insert, exchange1);
         } else {
             insert = exchange1.getIn().getBody(BasicDBList.class);
         }
 
-        if(insert == null) {
+        if (insert == null) {
             throw new CamelMongoDbException("MongoDB operation = insert, Body is not conversible to type DBObject nor List<DBObject>");
         }
         return insert;
